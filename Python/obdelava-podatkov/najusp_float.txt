@@ -1,0 +1,35 @@
+import requests
+
+def matematiki(izhod):
+    url = "http://www.dmfa-zaloznistvo.si/matjaz/prog2-pra/matematiki.txt"
+    response = requests.get(url)
+
+    linije = response.text.splitlines()[1:]
+    slo = dict()
+    for i in linije:
+        vrstica = i.split("\t")
+        ime_priimek = vrstica[0] + " " + vrstica[1]
+        if ime_priimek not in slo:
+            slo[ime_priimek] = dict()
+        if int(vrstica[13]) not in slo[ime_priimek].keys():
+            slo[ime_priimek].update({int(vrstica[13]): [0 if vrstica[22] == "NA" else float(vrstica[22]), 1]})
+        else:
+            slo[ime_priimek][int(vrstica[13])][0] += 0 if vrstica[22] == "NA" else float(vrstica[22])
+            slo[ime_priimek][int(vrstica[13])][1] += 1
+    s = dict()
+    for k, v in slo.items():
+        tocke = 0
+        publikacije = 0
+        leta = max(list(v.keys())) - min(list(v.keys())) + 1
+        for i in list(v.values()):
+            tocke += i[0]
+            publikacije += i[1]
+        s[k] = [float((publikacije / leta)), float(format(tocke / leta))]
+    
+    s = dict(sorted(s.items(), key=lambda item: item[1][1], reverse=True))
+    with open(izhod, "w", encoding="ISO-8859-1") as dat2:
+            for k, v in s.items():
+                dat2.write(f"{k}\t{v[0]:.2f}\t{v[1]:.2f}\n")
+    return izhod
+
+matematiki("izhodna.txt")

@@ -1,0 +1,8 @@
+Celje,25.09
+Koper,25.19
+Kranj,25.07
+Ljubljana,25.12
+Maribor,24.95
+Murska Sobota,25.33
+Novo mesto,24.66
+Ptuj,25.00
